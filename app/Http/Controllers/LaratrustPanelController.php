@@ -38,21 +38,4 @@ class LaratrustPanelController extends Controller
         $roles = Role::all();
         return view('laratrust::panel.roles-assignment.index', compact('users', 'roles'));
     }
-
-    public function createRole()
-    {
-        return view('laratrust::panel.roles.create');
-    }
-
-    public function storeRole(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|unique:roles,name',
-            'display_name' => 'required',
-            'description' => 'nullable',
-        ]);
-
-        Role::create($request->all());
-        return redirect()->route('laratrust.roles.index')->with('success', 'Role created successfully');
-    }
 }
