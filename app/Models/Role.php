@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use Laratrust\Models\Role as LaratrustRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laratrust\Models\Permission as LaratrustPermission;
 
-class Permission extends LaratrustPermission
+class Role extends LaratrustRole
 {
     use HasFactory;
 

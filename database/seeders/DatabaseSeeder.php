@@ -18,5 +18,16 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        $this->call([
+            LaratrustSeeder::class,
+            UsersSeeder::class,
+            ProjectsSeeder::class,
+            IssueTypesSeeder::class,
+            PrioritiesSeeder::class,
+            StatusesSeeder::class,
+            IssuesSeeder::class,
+            RolesAndPermissionsSeeder::class,
+        ]);
     }
 }

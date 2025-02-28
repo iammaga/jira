@@ -10,7 +10,7 @@ class Priority extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
-
+    public $timestamps = false;
     public function issues()
     {
         return $this->hasMany(Issue::class, 'priority_id');
