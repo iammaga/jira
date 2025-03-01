@@ -11,15 +11,14 @@ class UsersSeeder extends Seeder
 {
     public function run(): void
     {
-        \DB::table('role_user')->truncate();
-        \DB::table('users')->truncate();
-        \DB::table('roles')->truncate();
-
-        $admin = User::create([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('password'),
-        ]);
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@admin.com'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('password'),
+            ]
+        );
+        dump("Admin created with ID: " . $admin->id);
 
         $adminRole = Role::firstOrCreate(
             ['name' => 'admin'],
@@ -28,13 +27,20 @@ class UsersSeeder extends Seeder
                 'description' => 'Has full access to the system',
             ]
         );
-        $admin->roles()->attach($adminRole->id);
+        dump("Admin role created with ID: " . $adminRole->id);
 
-        $user = User::create([
-            'name' => 'User',
-            'email' => 'user@user.com',
-            'password' => Hash::make('password'),
-        ]);
+        $admin->roles()->sync([$adminRole->id]);
+        dump("Admin roles count after sync: " . $admin->roles()->count());
+        dump("role_user content: " . json_encode(\DB::table('role_user')->get()->toArray()));
+
+        $user = User::updateOrCreate(
+            ['email' => 'user@user.com'],
+            [
+                'name' => 'User',
+                'password' => Hash::make('password'),
+            ]
+        );
+        dump("User created with ID: " . $user->id);
 
         $userRole = Role::firstOrCreate(
             ['name' => 'user'],
@@ -43,6 +49,10 @@ class UsersSeeder extends Seeder
                 'description' => 'Regular system user',
             ]
         );
-        $user->roles()->attach($userRole->id);
+        dump("User role created with ID: " . $userRole->id);
+
+        $user->roles()->sync([$userRole->id]);
+        dump("User roles count after sync: " . $user->roles()->count());
+        dump("role_user content: " . json_encode(\DB::table('role_user')->get()->toArray()));
     }
 }

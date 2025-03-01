@@ -19,6 +19,12 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        \DB::table('role_user')->truncate();
+        \DB::table('permission_role')->truncate();
+        \DB::table('users')->truncate();
+        \DB::table('roles')->truncate();
+        \DB::table('permissions')->truncate();
+
         $this->call([
             LaratrustSeeder::class,
             UsersSeeder::class,

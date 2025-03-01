@@ -7,12 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Laratrust\Traits\LaratrustUser;
 use Laratrust\Traits\HasRolesAndPermissions;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasRolesAndPermissions;
+    use HasApiTokens, HasRolesAndPermissions, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -68,5 +67,15 @@ class User extends Authenticatable
     public function issueChanges()
     {
         return $this->hasMany(IssueHistory::class, 'changed_by');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function hasPermission($permission)
+    {
+        return $this->role && $this->role->permissions()->where('name', $permission)->exists();
     }
 }
