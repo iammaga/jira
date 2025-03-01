@@ -20,20 +20,21 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         \DB::table('role_user')->truncate();
+        \DB::table('permission_user')->truncate();
         \DB::table('permission_role')->truncate();
         \DB::table('users')->truncate();
         \DB::table('roles')->truncate();
         \DB::table('permissions')->truncate();
 
         $this->call([
-            LaratrustSeeder::class,
+            RolesAndPermissionsSeeder::class,
             UsersSeeder::class,
             ProjectsSeeder::class,
             IssueTypesSeeder::class,
             PrioritiesSeeder::class,
             StatusesSeeder::class,
             IssuesSeeder::class,
-            RolesAndPermissionsSeeder::class,
+            LaratrustSeeder::class,
         ]);
     }
 }
