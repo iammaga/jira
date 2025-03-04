@@ -13,4 +13,14 @@ class Role extends LaratrustRole
     public $guarded = [];
 
     protected $fillable = ['name', 'display_name', 'description'];
+
+    public function projects()
+    {
+        return $this->belongsToMany(
+            Project::class,
+            'project_role',
+            config('laratrust.foreign_keys.role'),
+            'project_id'
+        )->withPivot('permissions');
+    }
 }

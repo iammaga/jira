@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Issue;
+use App\Models\Project;
 use App\Models\Role;
 use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class LaratrustPanelController extends Controller
 {
@@ -187,5 +189,60 @@ class LaratrustPanelController extends Controller
         $user = User::find($request->user_id);
         $user->roles()->sync($request->roles ?? []);
         return redirect()->route('laratrust.roles-assignment')->with('success', 'Роли назначены');
+    }
+
+    public function projects()
+    {
+        $projects = Project::withCount('roles')->simplePaginate(10);
+        return view('laratrust.panel.projects.index', compact('projects'));
+    }
+
+    public function createProject()
+    {
+        return view('laratrust.panel.projects.create');
+    }
+
+    public function storeProject(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255|unique:projects,name',
+            'key' => 'required|string|max:10|unique:projects,key',
+            'description' => 'nullable|string',
+        ]);
+
+        Project::create($data);
+        Session::flash('laratrust-success', 'Проект успешно создан');
+        return redirect()->route('laratrust.projects');
+    }
+
+    public function showProject(Project $project)
+    {
+        $project->load('roles.permissions');
+        return view('laratrust.panel.projects.show', compact('project'));
+    }
+
+    public function editProject(Project $project)
+    {
+        return view('laratrust.panel.projects.edit', compact('project'));
+    }
+
+    public function updateProject(Request $request, Project $project)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255|unique:projects,name,' . $project->id,
+            'key' => 'required|string|max:10|unique:projects,key,' . $project->id,
+            'description' => 'nullable|string',
+        ]);
+
+        $project->update($data);
+        Session::flash('laratrust-success', 'Проект успешно обновлен');
+        return redirect()->route('laratrust.projects');
+    }
+
+    public function deleteProject(Project $project)
+    {
+        $project->delete();
+        Session::flash('laratrust-success', 'Проект успешно удален');
+        return redirect()->route('laratrust.projects');
     }
 }
