@@ -191,9 +191,30 @@ class LaratrustPanelController extends Controller
             'roles.*' => 'exists:roles,id',
         ]);
 
-        $user = User::find($request->user_id);
+        $user = User::findOrFail($request->user_id);
         $user->roles()->sync($request->roles ?? []);
-        return redirect()->route('laratrust.roles-assignment')->with('success', 'Роли назначены');
+
+        return redirect()->back()->with('success', 'Роли назначены');
+    }
+
+    public function showRolesAssignment($userId)
+    {
+        $user = User::findOrFail($userId);
+        return view('laratrust::panel.roles-assignment.show', compact('user'));
+    }
+
+    public function editRolesAssignment($userId)
+    {
+        $user = User::findOrFail($userId);
+        $roles = Role::all();
+        return view('laratrust::panel.roles-assignment.edit', compact('user', 'roles'));
+    }
+
+    public function updateRolesAssignment(Request $request, $userId)
+    {
+        $user = User::findOrFail($userId);
+        $user->roles()->sync($request->roles);
+        return redirect()->route('laratrust.roles-assignment.index')->with('success', 'Роли успешно обновлены');
     }
 
     public function projects()
@@ -250,4 +271,6 @@ class LaratrustPanelController extends Controller
         Session::flash('laratrust-success', 'Проект успешно удален');
         return redirect()->route('laratrust.projects');
     }
+
+
 }

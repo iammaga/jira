@@ -53,6 +53,10 @@ Route::middleware(['web', 'auth'])->prefix('laratrust')->name('laratrust.')->gro
     Route::middleware('role:admin|manager')->group(function () {
         Route::get('/roles-assignment', [LaratrustPanelController::class, 'rolesAssignment'])->name('roles-assignment.index');
         Route::post('/roles-assignment', [LaratrustPanelController::class, 'assignRoles'])->name('roles-assignment.store');
+        Route::delete('/roles-assignment/revoke/{user}', [LaratrustPanelController::class, 'revokeRoles'])->name('roles-assignment.revoke');
+        Route::get('/roles-assignment/{user}', [LaratrustPanelController::class, 'showRolesAssignment'])->name('roles-assignment.show');
+        Route::get('/roles-assignment/{user}/edit', [LaratrustPanelController::class, 'editRolesAssignment'])->name('roles-assignment.edit');
+        Route::put('/roles-assignment/{user}', [LaratrustPanelController::class, 'updateRolesAssignment'])->name('roles-assignment.update');
     });
 
     Route::middleware('role:admin|manager|user')->group(function () {
