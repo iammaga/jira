@@ -15,7 +15,7 @@ class LaratrustPanelController extends Controller
     public function __construct()
     {
         $this->middleware('permission:manage-issues')->only(['issues', 'createIssue', 'storeIssue', 'editIssue', 'updateIssue', 'deleteIssue']);
-        $this->middleware('permission:manage-users')->only(['roles', 'createRole', 'storeRole', 'editRole', 'updateRole', 'deleteRole', 'permissions', 'createPermission', 'storePermission', 'editPermission', 'updatePermission', 'deletePermission', 'rolesAssignment', 'assignRoles']);
+//        $this->middleware('permission:manage-users')->only(['roles', 'createRole', 'storeRole', 'editRole', 'updateRole', 'deleteRole', 'permissions', 'createPermission', 'storePermission', 'editPermission', 'updatePermission', 'deletePermission', 'rolesAssignment', 'assignRoles']);
         $this->middleware('auth');
         $this->middleware(function ($request, $next) {
             if (!auth()->user()->hasRole('admin')) {
@@ -125,9 +125,9 @@ class LaratrustPanelController extends Controller
         return redirect()->route('laratrust.roles')->with('success', 'Роль удалена');
     }
 
-    public function permissions()
+    public function permissions(Request $request)
     {
-        $permissions = Permission::paginate(10);
+        $permissions = Permission::simplePaginate(10);
         return view('laratrust::panel.permissions.index', compact('permissions'));
     }
 
@@ -145,7 +145,8 @@ class LaratrustPanelController extends Controller
         ]);
 
         Permission::create($request->all());
-        return redirect()->route('laratrust.permissions')->with('success', 'Право создано');
+        Session::flash('laratrust-success', 'Разрешение успешно создано');
+        return redirect()->route('laratrust.permissions.index');
     }
 
     public function editPermission(Permission $permission)
@@ -153,22 +154,26 @@ class LaratrustPanelController extends Controller
         return view('vendor.laratrust.panel.permissions-edit', compact('permission'));
     }
 
-    public function updatePermission(Request $request, Permission $permission)
+    public function updatePermission(Request $request, $id)
     {
+        $permission = Permission::findOrFail($id);
         $request->validate([
-            'name' => 'required|unique:permissions,name,' . $permission->id,
+            'name' => 'required|unique:permissions,name,' . $id,
             'display_name' => 'nullable|string',
             'description' => 'nullable|string',
         ]);
 
         $permission->update($request->all());
-        return redirect()->route('laratrust.permissions')->with('success', 'Право обновлено');
+        Session::flash('laratrust-success', 'Разрешение успешно обновлено');
+        return redirect()->route('laratrust.permissions.index');
     }
 
-    public function deletePermission(Permission $permission)
+    public function deletePermission($id)
     {
+        $permission = Permission::findOrFail($id);
         $permission->delete();
-        return redirect()->route('laratrust.permissions')->with('success', 'Право удалено');
+        Session::flash('laratrust-success', 'Разрешение успешно удалено');
+        return redirect()->route('laratrust.permissions.index');
     }
 
     public function rolesAssignment()
