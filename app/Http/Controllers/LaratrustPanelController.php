@@ -14,7 +14,7 @@ class LaratrustPanelController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:manage-issues')->only(['issues', 'createIssue', 'storeIssue', 'editIssue', 'updateIssue', 'deleteIssue']);
+//        $this->middleware('permission:manage-issues')->only(['issues', 'createIssue', 'storeIssue', 'editIssue', 'updateIssue', 'deleteIssue']);
 //        $this->middleware('permission:manage-users')->only(['roles', 'createRole', 'storeRole', 'editRole', 'updateRole', 'deleteRole', 'permissions', 'createPermission', 'storePermission', 'editPermission', 'updatePermission', 'deletePermission', 'rolesAssignment', 'assignRoles']);
         $this->middleware('auth');
         $this->middleware(function ($request, $next) {
@@ -27,8 +27,10 @@ class LaratrustPanelController extends Controller
 
     public function issues()
     {
-        $issues = Issue::with('user', 'role')->get();
-        return view('vendor.laratrust.panel.issues', compact('issues'));
+        $issues = Issue::with('user', 'role')->simplePaginate(10);
+        $users = User::all(['id', 'name']); // Передаём только нужные поля
+        $roles = Role::all(['id', 'display_name', 'name']);
+        return view('laratrust::panel.issues.index', compact('issues', 'users', 'roles'));
     }
 
     public function createIssue()
@@ -43,9 +45,9 @@ class LaratrustPanelController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'required|in:open,in_progress,closed',
-            'user_id' => 'required|exists:users,id',
-            'role_id' => 'required|exists:roles,id',
+            'status' => 'required|in:todo,in_progress,done',
+//            'user_id' => 'required|exists:users,id',
+//            'role_id' => 'required|exists:roles,id',
         ]);
 
         Issue::create($request->all());
@@ -64,9 +66,9 @@ class LaratrustPanelController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'required|in:open,in_progress,closed',
-            'user_id' => 'required|exists:users,id',
-            'role_id' => 'required|exists:roles,id',
+            'status' => 'required|in:todo,in_progress,done',
+//            'user_id' => 'required|exists:users,id',
+//            'role_id' => 'required|exists:roles,id',
         ]);
 
         $issue->update($request->all());
@@ -220,7 +222,7 @@ class LaratrustPanelController extends Controller
     public function projects()
     {
         $projects = Project::withCount('roles')->simplePaginate(10);
-        return view('laratrust.panel.projects.index', compact('projects'));
+        return view('laratrust::panel.projects.index', compact('projects'));
     }
 
     public function createProject()
@@ -244,12 +246,12 @@ class LaratrustPanelController extends Controller
     public function showProject(Project $project)
     {
         $project->load('roles.permissions');
-        return view('laratrust.panel.projects.show', compact('project'));
+        return view('laratrust::panel.projects.show', compact('project'));
     }
 
     public function editProject(Project $project)
     {
-        return view('laratrust.panel.projects.edit', compact('project'));
+        return view('laratrust::panel.projects.edit', compact('project'));
     }
 
     public function updateProject(Request $request, Project $project)
