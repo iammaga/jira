@@ -19,38 +19,32 @@
             <div class="flex justify-between h-16">
                 <div class="flex">
                     <!-- Logo -->
-{{--                    <div class="shrink-0 flex items-center">--}}
-{{--                        <svg class="h-10 w-auto" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="80" width="272" version="1.1" viewBox="0 0 272 80">--}}
-{{--                            <!-- Весь SVG код остаётся без изменений -->--}}
-{{--                        </svg>--}}
-{{--                    </div>--}}
+                    <div class="shrink-0 flex items-center">
+                        <a href="{{ route('dashboard') }}">
+                            <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        </a>
+                    </div>
 
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <a href="{{ route('dashboard') }}"
-                           class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out {{ request()->is('/') ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
-                            ← Dashboard
-                        </a>
-                        <a href="{{ route('laratrust.roles.index') }}"
-                           class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out {{ request()->is('*roles') ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
-                            Roles
-                        </a>
-                        <a href="{{ route('laratrust.permissions.index') }}"
-                           class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out {{ request()->is('*permissions*') ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
-                            Permissions
-                        </a>
-                        <a href="{{ route('laratrust.roles-assignment.index') }}"
-                           class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out {{ request()->is('*roles-assignment*') ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
-                            Roles & Permissions Assignment
-                        </a>
-                        <a href="{{ route('laratrust.projects') }}"
-                           class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out {{ request()->is('*roles-assignment*') ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
-                            Projects
-                        </a>
-                        <a href="{{ route('laratrust.issues') }}"
-                           class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out {{ request()->is('*roles-assignment*') ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
-                            Issues
-                        </a>
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('laratrust.roles.index')" :active="request()->routeIs('laratrust.roles.index')">
+                            {{ __('Roles') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('laratrust.permissions.index')" :active="request()->routeIs('laratrust.permissions.index')">
+                            {{ __('Permissions') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('laratrust.roles-assignment.index')" :active="request()->routeIs('laratrust.roles-assignment.index')">
+                            {{ __('Roles & Permissions Assignment') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('laratrust.projects')" :active="request()->routeIs('laratrust.projects')">
+                            {{ __('Projects') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('laratrust.issues')" :active="request()->routeIs('laratrust.issues')">
+                            {{ __('Issues') }}
+                        </x-nav-link>
                     </div>
                 </div>
 

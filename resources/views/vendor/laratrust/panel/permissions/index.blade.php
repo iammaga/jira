@@ -10,7 +10,7 @@
 
         <!-- Кнопка создания -->
         <div class="mb-6">
-            <button @click="openCreateModal = true" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+            <button @click="openCreateModal = true" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200">
                 Создать разрешение
             </button>
         </div>
@@ -34,13 +34,13 @@
                         <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $permission->description ?? 'Не указано' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap space-x-2">
                             <button @click="openEditModal = true; editId = {{ $permission->id }}; editName = '{{ $permission->name }}'; editDisplayName = '{{ $permission->display_name }}'; editDescription = '{{ $permission->description }}'"
-                                    class="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600 transition duration-200">
+                                    class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200">
                                 Редактировать
                             </button>
                             <form action="{{ route('laratrust.permissions.delete', $permission) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition duration-200" onclick="return confirm('Удалить разрешение?')">
+                                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200" onclick="return confirm('Удалить разрешение?')">
                                     Удалить
                                 </button>
                             </form>
@@ -80,7 +80,7 @@
                         <button type="button" @click="openCreateModal = false" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition duration-200">
                             Отмена
                         </button>
-                        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200">
+                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200">
                             Создать
                         </button>
                     </div>

@@ -11,7 +11,7 @@
         <!-- Кнопка назначения ролей -->
         <div class="mb-6">
             <button @click="openAssignModal = true"
-                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+                    class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200">
                 Назначить роли
             </button>
         </div>
@@ -53,14 +53,16 @@
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-                    <button type="submit"
-                            class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Назначить
-                    </button>
+                    <div class="flex justify-end space-x-4">
+                        <button @click="openAssignModal = false"
+                                class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition duration-200">
+                            Закрыть
+                        </button>
+                        <button type="submit"
+                                class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200">Назначить
+                        </button>
+                    </div>
                 </form>
-                <button @click="openAssignModal = false"
-                        class="mt-4 w-full bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
-                    Закрыть
-                </button>
             </div>
         </div>
 
@@ -83,13 +85,13 @@
                             <td class="px-6 py-4">{{ $user->roles->pluck('name')->implode(', ') }}</td>
                             <td class="px-6 py-4 flex space-x-2">
                                 <a href="{{ route('laratrust.roles-assignment.show', $user->id) }}"
-                                   class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Просмотр</a>
+                                   class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200">Просмотр</a>
                                 <a href="{{ route('laratrust.roles-assignment.edit', $user->id) }}"
-                                   class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700">Редактировать</a>
+                                   class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200">Редактировать</a>
                                 <form action="{{ route('laratrust.roles-assignment.revoke', $user->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Удалить</button>
+                                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200">Удалить</button>
                                 </form>
                             </td>
                         </tr>

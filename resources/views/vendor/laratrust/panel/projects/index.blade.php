@@ -11,7 +11,7 @@
         <!-- Кнопка создания -->
         <div class="mb-6">
             <button @click="openCreateModal = true"
-                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+                    class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200">
                 Создать проект
             </button>
         </div>
@@ -37,18 +37,18 @@
                         <td class="px-6 py-4 text-gray-700">{{ $project->roles_count }}</td>
                         <td class="px-6 py-4 space-x-2">
                             <a href="{{ route('laratrust.projects.show', $project) }}"
-                               class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition duration-200">
+                               class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200">
                                 Просмотр
                             </a>
                             <button @click="editId = {{ $project->id }}; editName = '{{ $project->name }}'; editKey = '{{ $project->key }}'; editDescription = '{{ $project->description ?? '' }}'; openEditModal = true"
-                                    class="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600 transition duration-200">
+                                    class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200">
                                 Редактировать
                             </button>
                             <form action="{{ route('laratrust.projects.delete', $project) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                        class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition duration-200"
+                                        class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200"
                                         onclick="return confirm('Удалить проект?')">
                                     Удалить
                                 </button>
@@ -68,7 +68,7 @@
         </div>
 
         <!-- Модальное окно для создания -->
-        <div x-show="openCreateModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div x-show="openCreateModal" x-cloak class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
                 <h2 class="text-xl font-bold mb-4">Создать проект</h2>
                 <form method="POST" action="{{ route('laratrust.projects.store') }}">
@@ -85,13 +85,13 @@
                         <label class="block text-sm font-medium text-gray-700">Описание</label>
                         <textarea name="description" class="w-full border rounded px-3 py-2"></textarea>
                     </div>
-                    <div class="flex justify-end space-x-4">
+                    <div class="flex justify-end space-x-4 my-2">
                         <button type="button" @click="openCreateModal = false"
-                                class="bg-gray-500 text-white px-4 py-2 rounded-md">
+                                class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition duration-200">
                             Отмена
                         </button>
                         <button type="submit"
-                                class="bg-green-600 text-white px-4 py-2 rounded-md">
+                                class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200">
                             Создать
                         </button>
                     </div>
@@ -100,7 +100,7 @@
         </div>
 
         <!-- Модальное окно для редактирования -->
-        <div x-show="openEditModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div x-show="openEditModal" x-cloak class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
                 <h2 class="text-xl font-bold mb-4">Редактировать проект</h2>
                 <form method="POST" :action="'{{ route('laratrust.projects.update', '') }}/' + editId">
@@ -133,3 +133,8 @@
         </div>
     </div>
 @endsection
+
+<style>
+    [x-cloak] { display: none !important; }
+</style>
+

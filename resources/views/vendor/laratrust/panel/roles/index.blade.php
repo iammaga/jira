@@ -9,7 +9,7 @@
 
     <!-- Кнопка создания и фильтры -->
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-4 sm:space-y-0">
-        <a href="{{ route('laratrust.roles.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+        <a href="{{ route('laratrust.roles.create') }}" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200">
             Создать роль
         </a>
         <form method="GET" class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
@@ -61,11 +61,11 @@
                         <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ optional($role->projects)->pluck('name')->implode(', ') ?? 'Нет проектов' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $role->permissions_count }}</td>
                         <td class="px-6 py-4 whitespace-nowrap space-x-2">
-                            <a href="{{ route('laratrust.roles.show', $role) }}" class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition duration-200">Просмотр</a>
-                            <a href="{{ route('laratrust.roles.edit', $role) }}" class="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600 transition duration-200">Редактировать</a>
+                            <a href="{{ route('laratrust.roles.show', $role) }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200">Просмотр</a>
+                            <a href="{{ route('laratrust.roles.edit', $role) }}" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200">Редактировать</a>
                             <form action="{{ route('laratrust.roles.destroy', $role) }}" method="POST" class="inline">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition duration-200" onclick="return confirm('Удалить роль?')">Удалить</button>
+                                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200" onclick="return confirm('Удалить роль?')">Удалить</button>
                             </form>
                         </td>
                     </tr>

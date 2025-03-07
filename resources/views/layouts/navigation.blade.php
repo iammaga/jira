@@ -18,6 +18,18 @@
                     <x-nav-link :href="route('laratrust.roles.index')" :active="request()->routeIs('laratrust.roles.index')">
                         {{ __('Roles') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('laratrust.permissions.index')" :active="request()->routeIs('laratrust.permissions.index')">
+                        {{ __('Permissions') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('laratrust.roles-assignment.index')" :active="request()->routeIs('laratrust.roles-assignment.index')">
+                        {{ __('Roles & Permissions Assignment') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('laratrust.projects')" :active="request()->routeIs('laratrust.projects')">
+                        {{ __('Projects') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('laratrust.issues')" :active="request()->routeIs('laratrust.issues')">
+                        {{ __('Issues') }}
+                    </x-nav-link>
                 </div>
             </div>
 
