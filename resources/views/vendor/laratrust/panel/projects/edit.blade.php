@@ -30,13 +30,11 @@
             </div>
 
             <div class="mt-6 flex justify-end space-x-4">
-                <!-- Кнопка "Отмена" -->
-                <a href="{{ route('laratrust.projects') }}" class="bg-gray-500 text-white px-6 py-3 rounded-md hover:bg-gray-600 transition duration-200">
+                <a href="{{ route('laratrust.projects') }}" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition duration-200">
                     Отмена
                 </a>
-                <!-- Кнопка "Сохранить" -->
-                <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition duration-200">
-                    Сохранить
+                <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition duration-200">
+                    Обновить
                 </button>
             </div>
         </form>

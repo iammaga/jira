@@ -27,7 +27,7 @@
             <a href="{{ route('laratrust.roles-assignment.index') }}" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition duration-200">
                 Назад
             </a>
-            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Обновить</button>
+            <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition duration-200">Обновить</button>
         </div>
     </form>
 @endsection

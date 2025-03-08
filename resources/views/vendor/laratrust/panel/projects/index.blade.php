@@ -120,12 +120,12 @@
                     </div>
                     <div class="flex justify-end space-x-4">
                         <button type="button" @click="openEditModal = false"
-                                class="bg-gray-500 text-white px-4 py-2 rounded-md">
+                                class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition duration-200">
                             Отмена
                         </button>
                         <button type="submit"
-                                class="bg-green-600 text-white px-4 py-2 rounded-md">
-                            Сохранить
+                                class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200">
+                            Обновить
                         </button>
                     </div>
                 </form>
