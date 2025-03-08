@@ -9,7 +9,7 @@
     <title>Laratrust - @yield('title')</title>
     <!-- Подключение Tailwind CSS через CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="//unpkg.com/alpinejs"></script>
 </head>
 <body>
 <div>
