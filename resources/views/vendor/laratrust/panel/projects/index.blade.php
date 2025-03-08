@@ -133,8 +133,3 @@
         </div>
     </div>
 @endsection
-
-<style>
-    [x-cloak] { display: none !important; }
-</style>
-
