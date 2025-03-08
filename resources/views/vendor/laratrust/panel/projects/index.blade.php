@@ -75,15 +75,15 @@
                     @csrf
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Название</label>
-                        <input type="text" name="name" class="w-full border rounded px-3 py-2" required>
+                        <input type="text" name="name" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
                     </div>
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Ключ</label>
-                        <input type="text" name="key" class="w-full border rounded px-3 py-2" required>
+                        <input type="text" name="key" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
                     </div>
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Описание</label>
-                        <textarea name="description" class="w-full border rounded px-3 py-2"></textarea>
+                        <textarea name="description" class="w-full border border-gray-300 rounded-md px-3 py-2"></textarea>
                     </div>
                     <div class="flex justify-end space-x-4 my-2">
                         <button type="button" @click="openCreateModal = false"
@@ -108,15 +108,15 @@
                     @method('PUT')
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Название</label>
-                        <input type="text" name="name" x-model="editName" class="w-full border rounded px-3 py-2" required>
+                        <input type="text" name="name" x-model="editName" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
                     </div>
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Ключ</label>
-                        <input type="text" name="key" x-model="editKey" class="w-full border rounded px-3 py-2" required>
+                        <input type="text" name="key" x-model="editKey" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
                     </div>
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Описание</label>
-                        <textarea name="description" x-model="editDescription" class="w-full border rounded px-3 py-2"></textarea>
+                        <textarea name="description" x-model="editDescription" class="w-full border border-gray-300 rounded-md px-3 py-2"></textarea>
                     </div>
                     <div class="flex justify-end space-x-4">
                         <button type="button" @click="openEditModal = false"

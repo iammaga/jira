@@ -13,20 +13,23 @@
 </head>
 <body>
 <div>
-    @include('layouts.navigation')
-
-    <header class="bg-white shadow">
-        <div class="max-w-6xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold leading-tight text-gray-900">
-                @yield('title')
-            </h1>
-        </div>
+    <header>
+        <x-app-layout>
+            <x-slot name="header">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    @yield('title')
+                </h2>
+            </x-slot>
+        </x-app-layout>
     </header>
+
     <main>
-        <div class="max-w-6xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             @foreach (['error', 'warning', 'success'] as $msg)
                 @if(Session::has('laratrust-' . $msg))
-                    <div class="bg-{{ $msg == 'error' ? 'red' : ($msg == 'warning' ? 'yellow' : 'green') }}-100 border border-{{ $msg == 'error' ? 'red' : ($msg == 'warning' ? 'yellow' : 'green') }}-400 text-{{ $msg == 'error' ? 'red' : ($msg == 'warning' ? 'yellow' : 'green') }}-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <div
+                        class="bg-{{ $msg == 'error' ? 'red' : ($msg == 'warning' ? 'yellow' : 'green') }}-100 border border-{{ $msg == 'error' ? 'red' : ($msg == 'warning' ? 'yellow' : 'green') }}-400 text-{{ $msg == 'error' ? 'red' : ($msg == 'warning' ? 'yellow' : 'green') }}-700 px-4 py-3 rounded relative mb-4"
+                        role="alert">
                         <p>{{ Session::get('laratrust-' . $msg) }}</p>
                     </div>
                 @endif
