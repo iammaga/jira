@@ -6,8 +6,10 @@ use App\Models\Issue;
 use App\Models\IssueType;
 use App\Models\Priority;
 use App\Models\Project;
+use App\Models\Release;
 use App\Models\Role;
 use App\Models\Permission;
+use App\Models\Sprint;
 use App\Models\Status;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -30,14 +32,18 @@ class LaratrustPanelController extends Controller
 
     public function issues()
     {
-        $issues = Issue::simplePaginate(10);
+        $issues = Issue::with(['status', 'project', 'type', 'priority', 'sprint', 'release', 'assignee', 'createdBy'])
+            ->simplePaginate(10);
         $users = User::all(['id', 'name']);
         $roles = Role::all(['id', 'display_name', 'name']);
-        $projects = Project::all(['id', 'name']); // Передаем проекты
+        $projects = Project::all(['id', 'name']);
         $issueTypes = IssueType::all(['id', 'name']);
         $priorities = Priority::all(['id', 'name']);
         $statuses = Status::all(['id', 'name']);
-        return view('laratrust::panel.issues.index', compact('issues', 'users', 'roles', 'projects', 'issueTypes', 'priorities', 'statuses'));
+        $sprints = Sprint::all(['id', 'name']);
+        $releases = Release::all(['id', 'version']); // Используем 'version' вместо 'name'
+
+        return view('laratrust::panel.issues.index', compact('issues', 'users', 'roles', 'projects', 'issueTypes', 'priorities', 'statuses', 'sprints', 'releases'));
     }
 
     public function createIssue()
@@ -56,6 +62,9 @@ class LaratrustPanelController extends Controller
             'project_id' => 'nullable|exists:projects,id',
             'type_id' => 'required|exists:issue_types,id',
             'priority_id' => 'required|exists:priorities,id',
+            'sprint_id' => 'nullable|exists:sprints,id', // Валидация для sprint_id
+            'release_id' => 'nullable|exists:releases,id', // Валидация для release_id
+            'assignee_id' => 'nullable|exists:users,id', // Валидация для assignee_id
         ]);
 
         Issue::create([
@@ -65,6 +74,9 @@ class LaratrustPanelController extends Controller
             'project_id' => $request->input('project_id'),
             'type_id' => $request->input('type_id'),
             'priority_id' => $request->input('priority_id'),
+            'sprint_id' => $request->input('sprint_id'), // Сохранение sprint_id
+            'release_id' => $request->input('release_id'), // Сохранение release_id
+            'assignee_id' => $request->input('assignee_id'), // Сохранение assignee_id
             'created_by' => auth()->check() ? auth()->id() : null,
         ]);
 
@@ -92,6 +104,9 @@ class LaratrustPanelController extends Controller
             'project_id' => 'nullable|exists:projects,id',
             'type_id' => 'required|exists:issue_types,id',
             'priority_id' => 'required|exists:priorities,id',
+            'sprint_id' => 'nullable|exists:sprints,id', // Валидация для sprint_id
+            'release_id' => 'nullable|exists:releases,id', // Валидация для release_id
+            'assignee_id' => 'nullable|exists:users,id', // Валидация для assignee_id
         ]);
 
         $issue->update([
@@ -101,6 +116,9 @@ class LaratrustPanelController extends Controller
             'project_id' => $request->input('project_id'),
             'type_id' => $request->input('type_id'),
             'priority_id' => $request->input('priority_id'),
+            'sprint_id' => $request->input('sprint_id'), // Обновление sprint_id
+            'release_id' => $request->input('release_id'), // Обновление release_id
+            'assignee_id' => $request->input('assignee_id'), // Обновление assignee_id
         ]);
 
         return redirect()->route('laratrust.issues')->with('success', 'Задача обновлена.');

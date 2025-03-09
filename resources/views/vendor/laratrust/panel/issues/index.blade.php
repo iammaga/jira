@@ -3,7 +3,7 @@
 @section('title', 'Список задач')
 
 @section('content')
-    <div x-data="{ openCreateModal: false, openEditModal: false, editId: null, editTitle: '', editDescription: '', editStatus: '', editProjectId: '', editTypeId: '', editPriorityId: ''}">
+    <div x-data="{ openCreateModal: false, openEditModal: false, editId: null, editTitle: '', editDescription: '', editStatus: '', editProjectId: '', editTypeId: '', editPriorityId: '', editSprintId: '', editReleaseId: '', editAssigneeId: ''}">
         <!-- Заголовок -->
         <div class="mb-6 flex justify-between items-center">
             <h1 class="text-2xl font-bold text-gray-900 flex items-center">
@@ -42,7 +42,19 @@
                         <i class="fas fa-exclamation-triangle mr-1"></i> Приоритет
                     </th>
                     <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
-                        <i class="fas fa-user mr-1"></i> Создано
+                        <i class="fas fa-running mr-1"></i> Спринт
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                        <i class="fas fa-box-open mr-1"></i> Релиз
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                        <i class="fas fa-user-check mr-1"></i> Исполнитель
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                        <i class="fas fa-user-alt mr-1"></i> Автор
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                        <i class="fas fa-calendar-alt mr-1"></i> Создано
                     </th>
                     <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         <i class="fas fa-cogs mr-1"></i> Действия
@@ -59,9 +71,13 @@
                         <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->project->name ?? 'Не указано' }}</td>
                         <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->type->name ?? 'Не указано' }}</td>
                         <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->priority->name ?? 'Не указано' }}</td>
-                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->createdBy->name ?? 'Неизвестно' }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->sprint->name ?? 'Не указано' }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->release->version ?? 'Не указано' }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->assignee->name ?? 'Не указано' }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->createdBy->name ?? 'Не указано' }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->created_at->format('d.m.Y H:i') }}</td>
                         <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap space-x-2 flex items-center">
-                            <button @click="editId = {{ $issue->id }}; editTitle = '{{ $issue->title }}'; editDescription = '{{ $issue->description ?? '' }}'; editStatus = '{{ $issue->status_id }}'; editProjectId = '{{ $issue->project_id }}'; editTypeId = '{{ $issue->type_id }}'; editPriorityId = '{{ $issue->priority_id }}'; openEditModal = true"
+                            <button @click="editId = {{ $issue->id }}; editTitle = '{{ $issue->title }}'; editDescription = '{{ $issue->description ?? '' }}'; editStatus = '{{ $issue->status_id }}'; editProjectId = '{{ $issue->project_id }}'; editTypeId = '{{ $issue->type_id }}'; editPriorityId = '{{ $issue->priority_id }}'; editSprintId = '{{ $issue->sprint_id }}'; editReleaseId = '{{ $issue->release_id }}'; editAssigneeId = '{{ $issue->assignee_id }}'; openEditModal = true"
                                     class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200 flex items-center" title="Редактировать">
                                 <i class="fas fa-edit md:mr-0 py-2"></i>
                             </button>
@@ -76,7 +92,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9" class="px-4 py-3 md:px-6 md:py-4 text-center text-gray-500 text-sm">Задачи не найдены</td>
+                        <td colspan="13" class="px-4 py-3 md:px-6 md:py-4 text-center text-gray-500 text-sm">Задачи не найдены</td>
                     </tr>
                 @endforelse
                 </tbody>
@@ -133,7 +149,7 @@
                     </div>
                     <div class="mb-4">
                         <label for="create_project_id" class="block text-sm font-medium text-gray-700">Проект</label>
-                        <select name="project_id" id="create_project_id" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('project_id') border-red-500 @enderror" required>
+                        <select name="project_id" id="create_project_id" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('project_id') border-red-500 @enderror">
                             <option value="">-- Выберите проект --</option>
                             @foreach ($projects as $project)
                                 <option value="{{ $project->id }}" {{ old('project_id') == $project->id ? 'selected' : '' }}>
@@ -156,6 +172,48 @@
                             @endforeach
                         </select>
                         @error('priority_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <label for="create_sprint_id" class="block text-sm font-medium text-gray-700">Спринт</label>
+                        <select name="sprint_id" id="create_sprint_id" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('sprint_id') border-red-500 @enderror">
+                            <option value="">-- Выберите спринт --</option>
+                            @foreach ($sprints as $sprint)
+                                <option value="{{ $sprint->id }}" {{ old('sprint_id') == $sprint->id ? 'selected' : '' }}>
+                                    {{ $sprint->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('sprint_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <label for="create_release_id" class="block text-sm font-medium text-gray-700">Релиз</label>
+                        <select name="release_id" id="create_release_id" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('release_id') border-red-500 @enderror">
+                            <option value="">-- Выберите релиз --</option>
+                            @foreach ($releases as $release)
+                                <option value="{{ $release->id }}" {{ old('release_id') == $release->id ? 'selected' : '' }}>
+                                    {{ $release->version }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('release_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <label for="create_assignee_id" class="block text-sm font-medium text-gray-700">Исполнитель</label>
+                        <select name="assignee_id" id="create_assignee_id" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('assignee_id') border-red-500 @enderror">
+                            <option value="">-- Выберите исполнителя --</option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}" {{ old('assignee_id') == $user->id ? 'selected' : '' }}>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('assignee_id')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
@@ -215,7 +273,7 @@
                     </div>
                     <div class="mb-4">
                         <label for="edit_project_id" class="block text-sm font-medium text-gray-700">Проект</label>
-                        <select name="project_id" id="edit_project_id" x-model="editProjectId" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('project_id') border-red-500 @enderror" required>
+                        <select name="project_id" id="edit_project_id" x-model="editProjectId" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('project_id') border-red-500 @enderror">
                             <option value="">-- Выберите проект --</option>
                             @foreach ($projects as $project)
                                 <option value="{{ $project->id }}">{{ $project->name }}</option>
@@ -234,6 +292,42 @@
                             @endforeach
                         </select>
                         @error('priority_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <label for="edit_sprint_id" class="block text-sm font-medium text-gray-700">Спринт</label>
+                        <select name="sprint_id" id="edit_sprint_id" x-model="editSprintId" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('sprint_id') border-red-500 @enderror">
+                            <option value="">-- Выберите спринт --</option>
+                            @foreach ($sprints as $sprint)
+                                <option value="{{ $sprint->id }}">{{ $sprint->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('sprint_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <label for="edit_release_id" class="block text-sm font-medium text-gray-700">Релиз</label>
+                        <select name="release_id" id="edit_release_id" x-model="editReleaseId" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('release_id') border-red-500 @enderror">
+                            <option value="">-- Выберите релиз --</option>
+                            @foreach ($releases as $release)
+                                <option value="{{ $release->id }}">{{ $release->version }}</option>
+                            @endforeach
+                        </select>
+                        @error('release_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <label for="edit_assignee_id" class="block text-sm font-medium text-gray-700">Исполнитель</label>
+                        <select name="assignee_id" id="edit_assignee_id" x-model="editAssigneeId" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('assignee_id') border-red-500 @enderror">
+                            <option value="">-- Выберите исполнителя --</option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('assignee_id')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
