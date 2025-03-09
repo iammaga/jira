@@ -4,22 +4,24 @@
 
 @section('content')
     <div x-data="{ openAssignModal: false }">
-        <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900">Роли</h1>
-        </div>
-
-        <!-- Кнопка назначения ролей -->
-        <div class="mb-6">
+        <!-- Заголовок -->
+        <div class="mb-6 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-900 flex items-center">
+                Роли
+            </h1>
+            <!-- Кнопка назначения ролей -->
             <button @click="openAssignModal = true"
-                    class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200">
-                Назначить роли
+                    class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200 flex items-cente"
+                    title="Назначить роли">
+                <i class="fas fa-plus md:mr-0 py-2"></i>
             </button>
         </div>
 
+        <!-- Модальное окно для назначения ролей -->
         <div x-show="openAssignModal"
              x-cloak
              class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <div class="bg-white p-4 md:p-6 rounded-lg shadow-lg w-full max-w-md mx-4">
                 <h2 class="text-xl font-bold mb-4">Назначить роли</h2>
                 <form method="POST" action="{{ route('laratrust.roles-assignment.store') }}">
                     @csrf
@@ -66,43 +68,57 @@
         </div>
 
         <!-- Таблица текущих назначений -->
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">Текущие назначения</h2>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Пользователь</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Роли</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
+        <div class="bg-white p-4 md:p-6 rounded-lg shadow overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <i class="fas fa-user mr-1"></i> Пользователь
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                        <i class="fas fa-user-tag mr-1"></i> Роли
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <i class="fas fa-cogs mr-1"></i> Действия
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                @forelse ($users as $user)
+                    <tr class="hover:bg-gray-100">
+                        <td class="px-4 py-3 md:px-6 md:py-4 text-sm text-gray-900">{{ $user->name }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 text-sm text-gray-700 hidden md:table-cell">{{ $user->roles->pluck('name')->implode(', ') }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 flex space-x-2 items-center">
+                            <a href="{{ route('laratrust.roles-assignment.show', $user->id) }}"
+                               class="bg-blue-500 text-white px-3 px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 flex items-center"
+                               title="Просмотр">
+                                <i class="fas fa-eye md:mr-0 py-2"></i>
+                            </a>
+                            <a href="{{ route('laratrust.roles-assignment.edit', $user->id) }}"
+                               class="bg-yellow-500 text-white px-3 px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200 flex items-center"
+                               title="Редактировать">
+                                <i class="fas fa-edit md:mr-0 py-2"></i>
+                            </a>
+                            <form action="{{ route('laratrust.roles-assignment.revoke', $user->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                        class="bg-red-500 text-white px-3 px-4 py-2 rounded-md hover:bg-red-600 transition duration-200 flex items-center"
+                                        title="Удалить"
+                                        onclick="return confirm('Удалить назначение ролей?')">
+                                    <i class="fas fa-trash-alt md:mr-0 py-2"></i>
+                                </button>
+                            </form>
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                    @forelse ($users as $user)
-                        <tr>
-                            <td class="px-6 py-4">{{ $user->name }}</td>
-                            <td class="px-6 py-4">{{ $user->roles->pluck('name')->implode(', ') }}</td>
-                            <td class="px-6 py-4 flex space-x-2">
-                                <a href="{{ route('laratrust.roles-assignment.show', $user->id) }}"
-                                   class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200">Просмотр</a>
-                                <a href="{{ route('laratrust.roles-assignment.edit', $user->id) }}"
-                                   class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200">Редактировать</a>
-                                <form action="{{ route('laratrust.roles-assignment.revoke', $user->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200">Удалить</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="3" class="px-6 py-4 text-center text-gray-500">Пользователи не найдены</td>
-                        </tr>
-                    @endforelse
-                    </tbody>
-                </table>
-            </div>
-            <div class="mt-6">
+                @empty
+                    <tr>
+                        <td colspan="3" class="px-4 py-3 md:px-6 md:py-4 text-center text-gray-500 text-sm">Пользователи не найдены</td>
+                    </tr>
+                @endforelse
+                </tbody>
+            </table>
+            <div class="mt-6 flex justify-center">
                 {{ $users->links('pagination::tailwind') }}
             </div>
         </div>

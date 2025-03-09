@@ -4,73 +4,91 @@
 
 @section('content')
     <div x-data="{ openCreateModal: false, openEditModal: false, editId: null, editTitle: '', editDescription: '', editStatus: '', editProjectId: '', editTypeId: '', editPriorityId: ''}">
-        <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900">Задачи</h1>
-        </div>
-
-        <!-- Кнопка создания -->
-        <div class="mb-6">
-            <button @click="openCreateModal = true" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200">
-                Создать задачу
+        <!-- Заголовок -->
+        <div class="mb-6 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-900 flex items-center">
+                Задачи
+            </h1>
+            <!-- Кнопка создания -->
+            <button @click="openCreateModal = true" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200 flex items-center" title="Создать задачу">
+                <i class="fas fa-plus md:mr-0 py-2"></i>
             </button>
         </div>
 
         <!-- Таблица задач -->
-        <div class="bg-white p-6 rounded-lg shadow">
+        <div class="bg-white p-4 md:p-6 rounded-lg shadow overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Название</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Описание</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Статус</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Проект</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Тип задачи</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Приоритет</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Создано</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <i class="fas fa-id-badge mr-1"></i> ID
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <i class="fas fa-heading mr-1"></i> Название
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                        <i class="fas fa-file-alt mr-1"></i> Описание
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                        <i class="fas fa-info-circle mr-1"></i> Статус
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                        <i class="fas fa-project-diagram mr-1"></i> Проект
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                        <i class="fas fa-tasks mr-1"></i> Тип
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> Приоритет
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                        <i class="fas fa-user mr-1"></i> Создано
+                    </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <i class="fas fa-cogs mr-1"></i> Действия
+                    </th>
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                 @forelse ($issues as $issue)
                     <tr class="hover:bg-gray-100">
-                        <td class="px-6 py-4 whitespace-nowrap text-gray-900">{{ $issue->id }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-gray-900">{{ $issue->title }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $issue->description ?? 'Не указано' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $issue->status->name ?? 'Не указано' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $issue->project->name ?? 'Не указано' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $issue->type->name ?? 'Не указано' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $issue->priority->name ?? 'Не указано' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $issue->createdBy->name ?? 'Неизвестно' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap space-x-2">
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-900 text-sm">{{ $issue->id }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-900 text-sm">{{ $issue->title }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->description ?? 'Не указано' }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->status->name ?? 'Не указано' }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->project->name ?? 'Не указано' }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->type->name ?? 'Не указано' }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->priority->name ?? 'Не указано' }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 text-sm hidden md:table-cell">{{ $issue->createdBy->name ?? 'Неизвестно' }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap space-x-2 flex items-center">
                             <button @click="editId = {{ $issue->id }}; editTitle = '{{ $issue->title }}'; editDescription = '{{ $issue->description ?? '' }}'; editStatus = '{{ $issue->status_id }}'; editProjectId = '{{ $issue->project_id }}'; editTypeId = '{{ $issue->type_id }}'; editPriorityId = '{{ $issue->priority_id }}'; openEditModal = true"
-                                    class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200">
-                                Редактировать
+                                    class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200 flex items-center" title="Редактировать">
+                                <i class="fas fa-edit md:mr-0 py-2"></i>
                             </button>
                             <form action="{{ route('laratrust.issues.delete', $issue) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200" onclick="return confirm('Удалить задачу?')">
-                                    Удалить
+                                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200 flex items-center" title="Удалить" onclick="return confirm('Удалить задачу?')">
+                                    <i class="fas fa-trash-alt md:mr-0 py-2"></i>
                                 </button>
                             </form>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9" class="px-6 py-4 text-center text-gray-500">Задачи не найдены</td>
+                        <td colspan="9" class="px-4 py-3 md:px-6 md:py-4 text-center text-gray-500 text-sm">Задачи не найдены</td>
                     </tr>
                 @endforelse
                 </tbody>
             </table>
-            <div class="mt-6">
+            <div class="mt-6 flex justify-center">
                 {{ $issues->links('pagination::tailwind') }}
             </div>
         </div>
 
         <!-- Модальное окно для создания -->
         <div x-show="openCreateModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50" x-cloak>
-            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <div class="bg-white p-4 md:p-6 rounded-lg shadow-lg w-full max-w-md mx-4">
                 <h2 class="text-xl font-bold mb-4">Создать задачу</h2>
                 <form method="POST" action="{{ route('laratrust.issues.store') }}">
                     @csrf
@@ -155,7 +173,7 @@
 
         <!-- Модальное окно для редактирования -->
         <div x-show="openEditModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50" x-cloak>
-            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <div class="bg-white p-4 md:p-6 rounded-lg shadow-lg w-full max-w-md mx-4">
                 <h2 class="text-xl font-bold mb-4">Редактировать задачу</h2>
                 <form method="POST" :action="'{{ route('laratrust.issues.update', '') }}/' + editId">
                     @csrf
