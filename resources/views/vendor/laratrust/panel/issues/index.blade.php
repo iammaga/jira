@@ -3,7 +3,7 @@
 @section('title', 'Список задач')
 
 @section('content')
-    <div x-data="issuesCrud">
+    <div x-data="{ openCreateModal: false, openEditModal: false, editId: null, editTitle: '', editDescription: '', editStatus: '', editProjectId: '', editTypeId: '', editPriorityId: ''}">
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-gray-900">Задачи</h1>
         </div>
@@ -24,6 +24,10 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Название</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Описание</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Статус</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Проект</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Тип задачи</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Приоритет</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Создано</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
                 </tr>
                 </thead>
@@ -33,9 +37,13 @@
                         <td class="px-6 py-4 whitespace-nowrap text-gray-900">{{ $issue->id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-gray-900">{{ $issue->title }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $issue->description ?? 'Не указано' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ ucfirst($issue->status->name) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $issue->status->name ?? 'Не указано' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $issue->project->name ?? 'Не указано' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $issue->type->name ?? 'Не указано' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $issue->priority->name ?? 'Не указано' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ $issue->createdBy->name ?? 'Неизвестно' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap space-x-2">
-                            <button @click="editIssue({{ $issue->id }}, '{{ $issue->title }}', '{{ $issue->description }}', '{{ $issue->status }}', {{ $issue->user_id ?? 'null' }}, {{ $issue->role_id ?? 'null' }})"
+                            <button @click="editId = {{ $issue->id }}; editTitle = '{{ $issue->title }}'; editDescription = '{{ $issue->description ?? '' }}'; editStatus = '{{ $issue->status_id }}'; editProjectId = '{{ $issue->project_id }}'; editTypeId = '{{ $issue->type_id }}'; editPriorityId = '{{ $issue->priority_id }}'; openEditModal = true"
                                     class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200">
                                 Редактировать
                             </button>
@@ -50,7 +58,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">Задачи не найдены</td>
+                        <td colspan="9" class="px-6 py-4 text-center text-gray-500">Задачи не найдены</td>
                     </tr>
                 @endforelse
                 </tbody>
@@ -78,42 +86,61 @@
                         <textarea name="description" id="create_description" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3"></textarea>
                     </div>
                     <div class="mb-4">
-                        <label for="create_status" class="block text-sm font-medium text-gray-700">Статус</label>
-                        <select name="status" id="create_status" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('status') border-red-500 @enderror" required>
-                            @foreach ($issues as $issue)
-                            <option value="{{ $issue->status }}" {{ old('status', $issue->status) == $issue->status ? 'selected' : '' }}>
-                                {{ ucfirst($issue->status->name) }}
-                            </option>
+                        <label for="create_status_id" class="block text-sm font-medium text-gray-700">Статус</label>
+                        <select name="status_id" id="create_status_id" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('status_id') border-red-500 @enderror" required>
+                            <option value="">-- Выберите статус --</option>
+                            @foreach ($statuses as $status)
+                                <option value="{{ $status->id }}" {{ old('status_id') == $status->id ? 'selected' : '' }}>
+                                    {{ $status->name }}
+                                </option>
                             @endforeach
                         </select>
-                        @error('status')
+                        @error('status_id')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-                    {{--                    <div class="mb-4">--}}
-{{--                        <label for="create_user_id" class="block text-sm font-medium text-gray-700">Пользователь</label>--}}
-{{--                        <select name="user_id" id="create_user_id" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('user_id') border-red-500 @enderror" required>--}}
-{{--                            <option value="">-- Выберите пользователя --</option>--}}
-{{--                            @foreach ($users as $user)--}}
-{{--                                <option value="{{ $user->id }}">{{ $user->name }}</option>--}}
-{{--                            @endforeach--}}
-{{--                        </select>--}}
-{{--                        @error('user_id')--}}
-{{--                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>--}}
-{{--                        @enderror--}}
-{{--                    </div>--}}
-{{--                    <div class="mb-4">--}}
-{{--                        <label for="create_role_id" class="block text-sm font-medium text-gray-700">Роль</label>--}}
-{{--                        <select name="role_id" id="create_role_id" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('role_id') border-red-500 @enderror" required>--}}
-{{--                            <option value="">-- Выберите роль --</option>--}}
-{{--                            @foreach ($roles as $role)--}}
-{{--                                <option value="{{ $role->id }}">{{ $role->display_name ?? $role->name }}</option>--}}
-{{--                            @endforeach--}}
-{{--                        </select>--}}
-{{--                        @error('role_id')--}}
-{{--                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>--}}
-{{--                        @enderror--}}
-{{--                    </div>--}}
+                    <div class="mb-4">
+                        <label for="create_type_id" class="block text-sm font-medium text-gray-700">Тип задачи</label>
+                        <select name="type_id" id="create_type_id" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('type_id') border-red-500 @enderror" required>
+                            <option value="">-- Выберите тип --</option>
+                            @foreach ($issueTypes as $type)
+                                <option value="{{ $type->id }}" {{ old('type_id') == $type->id ? 'selected' : '' }}>
+                                    {{ $type->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('type_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <label for="create_project_id" class="block text-sm font-medium text-gray-700">Проект</label>
+                        <select name="project_id" id="create_project_id" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('project_id') border-red-500 @enderror" required>
+                            <option value="">-- Выберите проект --</option>
+                            @foreach ($projects as $project)
+                                <option value="{{ $project->id }}" {{ old('project_id') == $project->id ? 'selected' : '' }}>
+                                    {{ $project->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('project_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <label for="create_priority_id" class="block text-sm font-medium text-gray-700">Приоритет</label>
+                        <select name="priority_id" id="create_priority_id" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('priority_id') border-red-500 @enderror" required>
+                            <option value="">-- Выберите приоритет --</option>
+                            @foreach ($priorities as $priority)
+                                <option value="{{ $priority->id }}" {{ old('priority_id') == $priority->id ? 'selected' : '' }}>
+                                    {{ $priority->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('priority_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                     <div class="flex justify-end space-x-4">
                         <button type="button" @click="openCreateModal = false" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition duration-200">
                             Отмена
@@ -130,7 +157,7 @@
         <div x-show="openEditModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50" x-cloak>
             <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
                 <h2 class="text-xl font-bold mb-4">Редактировать задачу</h2>
-                <form method="POST" x-bind:action="'{{ route('laratrust.issues.update', '') }}/' + editId">
+                <form method="POST" :action="'{{ route('laratrust.issues.update', '') }}/' + editId">
                     @csrf
                     @method('PUT')
                     <div class="mb-4">
@@ -145,42 +172,53 @@
                         <textarea name="description" id="edit_description" x-model="editDescription" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3"></textarea>
                     </div>
                     <div class="mb-4">
-                        <label for="edit_status" class="block text-sm font-medium text-gray-700">Статус</label>
-                        <select name="status" id="edit_status" x-model="editStatus" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('status') border-red-500 @enderror" required>
-                            @foreach ($issues as $issue)
-                                <option value="{{ $issue->status }}" {{ old('status', $issue->status) == $issue->status ? 'selected' : '' }}>
-                                    {{ ucfirst($issue->status->name) }}
-                                </option>
+                        <label for="edit_status_id" class="block text-sm font-medium text-gray-700">Статус</label>
+                        <select name="status_id" id="edit_status_id" x-model="editStatus" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('status_id') border-red-500 @enderror" required>
+                            <option value="">-- Выберите статус --</option>
+                            @foreach ($statuses as $status)
+                                <option value="{{ $status->id }}">{{ $status->name }}</option>
                             @endforeach
                         </select>
-                        @error('status')
+                        @error('status_id')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-{{--                    <div class="mb-4">--}}
-{{--                        <label for="edit_user_id" class="block text-sm font-medium text-gray-700">Пользователь</label>--}}
-{{--                        <select name="user_id" id="edit_user_id" x-model="editUserId" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('user_id') border-red-500 @enderror" required>--}}
-{{--                            <option value="">-- Выберите пользователя --</option>--}}
-{{--                            @foreach ($users as $user)--}}
-{{--                                <option value="{{ $user->id }}">{{ $user->name }}</option>--}}
-{{--                            @endforeach--}}
-{{--                        </select>--}}
-{{--                        @error('user_id')--}}
-{{--                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>--}}
-{{--                        @enderror--}}
-{{--                    </div>--}}
-{{--                    <div class="mb-4">--}}
-{{--                        <label for="edit_role_id" class="block text-sm font-medium text-gray-700">Роль</label>--}}
-{{--                        <select name="role_id" id="edit_role_id" x-model="editRoleId" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('role_id') border-red-500 @enderror" required>--}}
-{{--                            <option value="">-- Выберите роль --</option>--}}
-{{--                            @foreach ($roles as $role)--}}
-{{--                                <option value="{{ $role->id }}">{{ $role->display_name ?? $role->name }}</option>--}}
-{{--                            @endforeach--}}
-{{--                        </select>--}}
-{{--                        @error('role_id')--}}
-{{--                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>--}}
-{{--                        @enderror--}}
-{{--                    </div>--}}
+                    <div class="mb-4">
+                        <label for="edit_type_id" class="block text-sm font-medium text-gray-700">Тип задачи</label>
+                        <select name="type_id" id="edit_type_id" x-model="editTypeId" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('type_id') border-red-500 @enderror" required>
+                            <option value="">-- Выберите тип --</option>
+                            @foreach ($issueTypes as $type)
+                                <option value="{{ $type->id }}">{{ $type->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('type_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <label for="edit_project_id" class="block text-sm font-medium text-gray-700">Проект</label>
+                        <select name="project_id" id="edit_project_id" x-model="editProjectId" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('project_id') border-red-500 @enderror" required>
+                            <option value="">-- Выберите проект --</option>
+                            @foreach ($projects as $project)
+                                <option value="{{ $project->id }}">{{ $project->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('project_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <label for="edit_priority_id" class="block text-sm font-medium text-gray-700">Приоритет</label>
+                        <select name="priority_id" id="edit_priority_id" x-model="editPriorityId" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('priority_id') border-red-500 @enderror" required>
+                            <option value="">-- Выберите приоритет --</option>
+                            @foreach ($priorities as $priority)
+                                <option value="{{ $priority->id }}">{{ $priority->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('priority_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                     <div class="flex justify-end space-x-4">
                         <button type="button" @click="openEditModal = false" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition duration-200">
                             Отмена
@@ -193,29 +231,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const issueCrud = {
-                openCreateModal: false,
-                openEditModal: false,
-                editId: null,
-                editTitle: '',
-                editDescription: '',
-                editStatus: '',
-                editUserId: null,
-                editRoleId: null,
-                editIssue(id, title, description, status) {
-                    this.openEditModal = true;
-                    this.editId = id;
-                    this.editTitle = title;
-                    this.editDescription = description;
-                    this.editStatus = status;
-                    // this.editUserId = user_id;
-                    // this.editRoleId = role_id;
-                }
-            };
-            window.issuesCrud = issueCrud;
-        });
-    </script>
 @endsection

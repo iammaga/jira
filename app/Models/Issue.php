@@ -73,4 +73,9 @@ class Issue extends Model
     {
         return $this->belongsTo(Role::class);
     }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }

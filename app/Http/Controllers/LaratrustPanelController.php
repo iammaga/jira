@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Issue;
+use App\Models\IssueType;
+use App\Models\Priority;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\Permission;
+use App\Models\Status;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -27,10 +30,14 @@ class LaratrustPanelController extends Controller
 
     public function issues()
     {
-        $issues = Issue::with('user', 'role')->simplePaginate(10);
-        $users = User::all(['id', 'name']); // Передаём только нужные поля
+        $issues = Issue::simplePaginate(10);
+        $users = User::all(['id', 'name']);
         $roles = Role::all(['id', 'display_name', 'name']);
-        return view('laratrust::panel.issues.index', compact('issues', 'users', 'roles'));
+        $projects = Project::all(['id', 'name']); // Передаем проекты
+        $issueTypes = IssueType::all(['id', 'name']);
+        $priorities = Priority::all(['id', 'name']);
+        $statuses = Status::all(['id', 'name']);
+        return view('laratrust::panel.issues.index', compact('issues', 'users', 'roles', 'projects', 'issueTypes', 'priorities', 'statuses'));
     }
 
     public function createIssue()
@@ -45,12 +52,22 @@ class LaratrustPanelController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'required|in:todo,in_progress,done',
-//            'user_id' => 'required|exists:users,id',
-//            'role_id' => 'required|exists:roles,id',
+            'status_id' => 'required|exists:statuses,id',
+            'project_id' => 'nullable|exists:projects,id',
+            'type_id' => 'required|exists:issue_types,id',
+            'priority_id' => 'required|exists:priorities,id',
         ]);
 
-        Issue::create($request->all());
+        Issue::create([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'status_id' => $request->input('status_id'),
+            'project_id' => $request->input('project_id'),
+            'type_id' => $request->input('type_id'),
+            'priority_id' => $request->input('priority_id'),
+            'created_by' => auth()->check() ? auth()->id() : null,
+        ]);
+
         return redirect()->route('laratrust.issues')->with('success', 'Задача создана.');
     }
 
@@ -58,7 +75,12 @@ class LaratrustPanelController extends Controller
     {
         $users = User::all();
         $roles = Role::all();
-        return view('vendor.laratrust.panel.issues-edit', compact('issue', 'users', 'roles'));
+        $projects = Project::all(['id', 'name']);
+        $issueTypes = IssueType::all(['id', 'name']);
+        $priorities = Priority::all(['id', 'name']);
+        $statuses = Status::all(['id', 'name']);
+
+        return view('vendor.laratrust.panel.issues-edit', compact('issue', 'users', 'roles', 'projects', 'issueTypes', 'priorities', 'statuses'));
     }
 
     public function updateIssue(Request $request, Issue $issue)
@@ -66,12 +88,21 @@ class LaratrustPanelController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'required|in:todo,in_progress,done',
-//            'user_id' => 'required|exists:users,id',
-//            'role_id' => 'required|exists:roles,id',
+            'status_id' => 'required|exists:statuses,id',
+            'project_id' => 'nullable|exists:projects,id',
+            'type_id' => 'required|exists:issue_types,id',
+            'priority_id' => 'required|exists:priorities,id',
         ]);
 
-        $issue->update($request->all());
+        $issue->update([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'status_id' => $request->input('status_id'),
+            'project_id' => $request->input('project_id'),
+            'type_id' => $request->input('type_id'),
+            'priority_id' => $request->input('priority_id'),
+        ]);
+
         return redirect()->route('laratrust.issues')->with('success', 'Задача обновлена.');
     }
 

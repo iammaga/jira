@@ -9,6 +9,8 @@ class Priority extends Model
 {
     use HasFactory;
 
+    protected $table = 'priorities';
+
     protected $fillable = ['name'];
     public $timestamps = false;
     public function issues()
