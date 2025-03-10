@@ -229,9 +229,11 @@ class LaratrustPanelController extends Controller
 
     public function rolesAssignment()
     {
-        $users = User::with('roles')->paginate(10);
+        $users = User::with(['roles', 'permissions'])->paginate(10);
         $roles = Role::all();
-        return view('laratrust::panel.roles-assignment.index', compact('users', 'roles'));
+        $permissions = Permission::all();
+
+        return view('laratrust::panel.roles-assignment.index', compact('users', 'roles', 'permissions'));
     }
 
     public function assignRoles(Request $request)
@@ -240,12 +242,21 @@ class LaratrustPanelController extends Controller
             'user_id' => 'required|exists:users,id',
             'roles' => 'array',
             'roles.*' => 'exists:roles,id',
+            'permissions' => 'array',
+            'permissions.*' => 'exists:permissions,id',
         ]);
 
         $user = User::findOrFail($request->user_id);
+
         $user->roles()->sync($request->roles ?? []);
 
-        return redirect()->back()->with('success', 'Роли назначены');
+        if ($request->permissions) {
+            $user->permissions()->sync($request->permissions);
+        } else {
+            $user->permissions()->detach();
+        }
+
+        return redirect()->back()->with('success', 'Роли и разрешения назначены');
     }
 
     public function showRolesAssignment($userId)
@@ -258,14 +269,17 @@ class LaratrustPanelController extends Controller
     {
         $user = User::findOrFail($userId);
         $roles = Role::all();
-        return view('laratrust::panel.roles-assignment.edit', compact('user', 'roles'));
+        $permissions = Permission::all();
+        return view('laratrust::panel.roles-assignment.edit', compact('user', 'roles', 'permissions'));
     }
 
     public function updateRolesAssignment(Request $request, $userId)
     {
         $user = User::findOrFail($userId);
-        $user->roles()->sync($request->roles);
-        return redirect()->route('laratrust.roles-assignment.index')->with('success', 'Роли успешно обновлены');
+        $user->roles()->sync($request->roles ?? []);
+        $user->permissions()->sync($request->permissions ?? []);
+
+        return redirect()->route('laratrust.roles-assignment.index')->with('success', 'Роли и разрешения успешно обновлены');
     }
 
     public function projects()

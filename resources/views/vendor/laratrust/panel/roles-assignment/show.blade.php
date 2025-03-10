@@ -26,9 +26,23 @@
                         <dd class="text-sm text-gray-900">
                             <ul class="list-disc pl-5 space-y-1">
                                 @foreach ($user->roles as $role)
-                                    <li>{{ $role->name }}</li>
+                                    <li>{{ $role->name }}, {{ $role->description }}</li>
                                 @endforeach
                             </ul>
+                        </dd>
+                    </div>
+                    <div class="flex items-center">
+                        <dt class="w-1/3 text-sm font-medium text-gray-600">Разрешения:</dt>
+                        <dd class="text-sm text-gray-900">
+                            @if ($user->permissions->isNotEmpty())
+                                <ul class="list-disc pl-5 space-y-1">
+                                    @foreach ($user->permissions as $permission)
+                                        <li>{{ $permission->name }}</li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <span class="text-gray-900">Нет разрешений</span>
+                            @endif
                         </dd>
                     </div>
                 </dl>
@@ -41,7 +55,7 @@
                 Назад
             </a>
             <a href="{{ route('laratrust.roles-assignment.edit', $user->id) }}" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-200">
-            Редактировать
+                Редактировать
             </a>
         </div>
     </div>

@@ -30,10 +30,6 @@
                     <x-nav-link :href="route('laratrust.issues')" :active="request()->routeIs('laratrust.issues')">
                         {{ __('Issues') }}
                     </x-nav-link>
-                    <!-- Profile link with active state -->
-                    <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
-                        {{ __('Profile') }}
-                    </x-nav-link>
                 </div>
             </div>
 

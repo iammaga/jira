@@ -11,9 +11,9 @@
             </h1>
             <!-- Кнопка назначения ролей -->
             <button @click="openAssignModal = true"
-                    class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200 flex items-cente"
+                    class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200 flex items-center"
                     title="Назначить роли">
-                <i class="fas fa-plus md:mr-0 py-2"></i>
+                <i class="fas fa-user-plus md:mr-0 py-2"></i>
             </button>
         </div>
 
@@ -50,9 +50,18 @@
                                 </div>
                             @endforeach
                         </div>
-                        @error('roles')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Разрешения</label>
+                        <div class="mt-2 space-y-2">
+                            @foreach ($permissions as $permission)
+                                <div class="flex items-center">
+                                    <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" id="permission-{{ $permission->id }}"
+                                           class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <label for="permission-{{ $permission->id }}" class="ml-2 text-sm text-gray-700">{{ $permission->display_name ?? $permission->name }}</label>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                     <div class="flex justify-end space-x-4">
                         <button @click="openAssignModal = false"
@@ -78,6 +87,9 @@
                     <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                         <i class="fas fa-user-tag mr-1"></i> Роли
                     </th>
+                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                        <i class="fas fa-lock mr-1"></i> Разрешения
+                    </th>
                     <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         <i class="fas fa-cogs mr-1"></i> Действия
                     </th>
@@ -87,15 +99,20 @@
                 @forelse ($users as $user)
                     <tr class="hover:bg-gray-100">
                         <td class="px-4 py-3 md:px-6 md:py-4 text-sm text-gray-900">{{ $user->name }}</td>
-                        <td class="px-4 py-3 md:px-6 md:py-4 text-sm text-gray-700 hidden md:table-cell">{{ $user->roles->pluck('name')->implode(', ') }}</td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 text-sm text-gray-700 hidden md:table-cell">
+                            {{ $user->roles->pluck('name')->implode(', ') }}
+                        </td>
+                        <td class="px-4 py-3 md:px-6 md:py-4 text-sm text-gray-700 hidden md:table-cell">
+                            {{ $user->permissions->isNotEmpty() ? $user->permissions->pluck('name')->implode(', ') : 'Нет разрешений' }}
+                        </td>
                         <td class="px-4 py-3 md:px-6 md:py-4 flex space-x-2 items-center">
                             <a href="{{ route('laratrust.roles-assignment.show', $user->id) }}"
-                               class="bg-blue-500 text-white px-3 px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 flex items-center"
+                               class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 flex items-center"
                                title="Просмотр">
                                 <i class="fas fa-eye md:mr-0 py-2"></i>
                             </a>
                             <a href="{{ route('laratrust.roles-assignment.edit', $user->id) }}"
-                               class="bg-yellow-500 text-white px-3 px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200 flex items-center"
+                               class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200 flex items-center"
                                title="Редактировать">
                                 <i class="fas fa-edit md:mr-0 py-2"></i>
                             </a>
@@ -103,7 +120,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                        class="bg-red-500 text-white px-3 px-4 py-2 rounded-md hover:bg-red-600 transition duration-200 flex items-center"
+                                        class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200 flex items-center"
                                         title="Удалить"
                                         onclick="return confirm('Удалить назначение ролей?')">
                                     <i class="fas fa-trash-alt md:mr-0 py-2"></i>
@@ -113,7 +130,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3" class="px-4 py-3 md:px-6 md:py-4 text-center text-gray-500 text-sm">Пользователи не найдены</td>
+                        <td colspan="4" class="px-4 py-3 md:px-6 md:py-4 text-center text-gray-500 text-sm">Пользователи не найдены</td>
                     </tr>
                 @endforelse
                 </tbody>

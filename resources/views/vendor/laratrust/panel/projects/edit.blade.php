@@ -1,5 +1,7 @@
 @extends('laratrust::panel.layout')
 
+@section('title', 'Редактирование проекта')
+
 @section('content')
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900">Редактировать проект: {{ $project->name }}</h1>
