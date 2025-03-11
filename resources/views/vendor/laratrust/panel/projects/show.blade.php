@@ -14,21 +14,21 @@
                 <h2 class="text-lg font-semibold text-gray-800">Основные данные</h2>
                 <dl class="mt-2 space-y-2">
                     <div class="flex items-center">
-                        <dt class="w-1/3 text-sm font-medium text-gray-600">Ключ:</dt>
-                        <dd class="text-sm text-gray-900">{{ $project->key }}</dd>
-                    </div>
-                    <div class="flex items-center">
                         <dt class="w-1/3 text-sm font-medium text-gray-600">Описание:</dt>
                         <dd class="text-sm text-gray-900">{{ $project->description }}</dd>
                     </div>
                     <div class="flex items-center">
                         <dt class="w-1/3 text-sm font-medium text-gray-600">Роли:</dt>
                         <dd class="text-sm text-gray-900">
-                            <ul class="list-disc pl-5 space-y-1">
-                                @foreach ($project->roles as $role)
-                                    <li>{{ $role->display_name ?? $role->name }} (Прав: {{ $role->permissions->count() }})</li>
-                                @endforeach
-                            </ul>
+                            @if ($project->roles->isEmpty())
+                                <p>У пользователя нет ролей.</p>
+                            @else
+                                <ul class="list-disc pl-5 space-y-1">
+                                    @foreach ($project->roles as $role)
+                                        <li>{{ $role->display_name ?? $role->name }} (Прав: {{ $role->permissions->count() }})</li>
+                                    @endforeach
+                                </ul>
+                            @endif
                         </dd>
                     </div>
                 </dl>

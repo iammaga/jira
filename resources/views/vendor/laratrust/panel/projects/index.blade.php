@@ -26,9 +26,6 @@
                         <i class="fas fa-heading mr-1"></i> Название
                     </th>
                     <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
-                        <i class="fas fa-key mr-1"></i> Ключ
-                    </th>
-                    <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                         <i class="fas fa-file-alt mr-1"></i> Описание
                     </th>
                     <th class="px-4 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
@@ -43,7 +40,6 @@
                 @forelse ($projects as $project)
                     <tr class="hover:bg-gray-100">
                         <td class="px-4 py-3 md:px-6 md:py-4 text-gray-900 text-sm">{{ $project->name }}</td>
-                        <td class="px-4 py-3 md:px-6 md:py-4 text-gray-700 text-sm hidden md:table-cell">{{ $project->key }}</td>
                         <td class="px-4 py-3 md:px-6 md:py-4 text-gray-700 text-sm hidden md:table-cell">{{ $project->description ?? 'Не указано' }}</td>
                         <td class="px-4 py-3 md:px-6 md:py-4 text-gray-700 text-sm hidden md:table-cell">{{ $project->roles_count }}</td>
                         <td class="px-4 py-3 md:px-6 md:py-4 space-x-2 flex items-center">
@@ -95,13 +91,6 @@
                         @enderror
                     </div>
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700">Ключ</label>
-                        <input type="text" name="key" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('key') border-red-500 @enderror" required>
-                        @error('key')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Описание</label>
                         <textarea name="description" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                     </div>
@@ -130,13 +119,6 @@
                         <label class="block text-sm font-medium text-gray-700">Название</label>
                         <input type="text" name="name" x-model="editName" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('name') border-red-500 @enderror" required>
                         @error('name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700">Ключ</label>
-                        <input type="text" name="key" x-model="editKey" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('key') border-red-500 @enderror" required>
-                        @error('key')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>

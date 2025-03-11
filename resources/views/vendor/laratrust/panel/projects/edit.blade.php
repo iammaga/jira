@@ -18,12 +18,6 @@
                     <input type="text" name="name" id="name" value="{{ $project->name }}" class="mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                 </div>
 
-                <!-- Ключ -->
-                <div class="form-group">
-                    <label for="key" class="text-sm font-medium text-gray-700">Ключ</label>
-                    <input type="text" name="key" id="key" value="{{ $project->key }}" class="mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                </div>
-
                 <!-- Описание -->
                 <div class="form-group">
                     <label for="description" class="text-sm font-medium text-gray-700">Описание</label>

@@ -306,9 +306,10 @@ class LaratrustPanelController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:projects,name',
-            'key' => 'required|string|max:10|unique:projects,key',
             'description' => 'nullable|string',
         ]);
+
+        $data['created_by'] = auth()->id();
 
         Project::create($data);
         Session::flash('laratrust-success', 'Проект успешно создан');
@@ -330,7 +331,6 @@ class LaratrustPanelController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:projects,name,' . $project->id,
-            'key' => 'required|string|max:10|unique:projects,key,' . $project->id,
             'description' => 'nullable|string',
         ]);
 
@@ -345,6 +345,4 @@ class LaratrustPanelController extends Controller
         Session::flash('laratrust-success', 'Проект успешно удален');
         return redirect()->route('laratrust.projects');
     }
-
-
 }
