@@ -282,6 +282,15 @@ class LaratrustPanelController extends Controller
         return redirect()->route('laratrust.roles-assignment.index')->with('success', 'Роли и разрешения успешно обновлены');
     }
 
+    public function removeRoles(User $user)
+    {
+        $user->roles()->detach();
+        $user->permissions()->detach();
+        $user->delete();
+
+        return redirect()->route('laratrust.roles-assignment.index')->with('success', 'Роли успешно отозваны');
+    }
+
     public function projects()
     {
         $projects = Project::withCount('roles')->simplePaginate(10);

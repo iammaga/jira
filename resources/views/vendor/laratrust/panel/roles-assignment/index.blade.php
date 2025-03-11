@@ -116,7 +116,7 @@
                                title="Редактировать">
                                 <i class="fas fa-edit md:mr-0 py-2"></i>
                             </a>
-                            <form action="{{ route('laratrust.roles-assignment.revoke', $user->id) }}" method="POST" class="inline">
+                            <form action="{{ route('laratrust.roles-assignment.remove', $user->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
