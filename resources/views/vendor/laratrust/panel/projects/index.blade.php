@@ -7,7 +7,7 @@
         <!-- Заголовок -->
         <div class="mb-6 flex justify-between items-center">
             <h1 class="text-2xl font-bold text-gray-900 flex items-center">
-                Проекты
+                <i class="fas fa-folder mr-2"></i> Проекты
             </h1>
             <!-- Кнопка создания -->
             <button @click="openCreateModal = true"

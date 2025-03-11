@@ -7,7 +7,7 @@
         <!-- Заголовок -->
         <div class="mb-6 flex justify-between items-center">
             <h1 class="text-2xl font-bold text-gray-900 flex items-center">
-                Разрешения
+                <i class="fas fa-key mr-2"></i> Разрешения
             </h1>
             <!-- Кнопка создания -->
             <button @click="openCreateModal = true"

@@ -7,7 +7,7 @@
         <!-- Заголовок -->
         <div class="mb-6 flex justify-between items-center">
             <h1 class="text-2xl font-bold text-gray-900 flex items-center">
-                Задачи
+                <i class="fas fa-exclamation-circle mr-2"></i> Задачи
             </h1>
             <!-- Кнопка создания -->
             <button @click="openCreateModal = true" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200 flex items-center" title="Создать задачу">
