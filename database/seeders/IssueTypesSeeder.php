@@ -15,7 +15,7 @@ class IssueTypesSeeder extends Seeder
     {
         $types = ['Bug', 'Feature', 'Task'];
         foreach ($types as $type) {
-            IssueType::create(['name' => $type]);
+            IssueType::firstOrCreate(['name' => $type]);
         }
     }
 }
