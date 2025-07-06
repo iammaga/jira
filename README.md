@@ -85,7 +85,7 @@ password => password
 Обычный пользователь
 
 ```bash
-email => admin@admin.com
+email => user@user.com
 password => password
 ```
 
